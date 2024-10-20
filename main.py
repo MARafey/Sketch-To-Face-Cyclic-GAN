@@ -146,9 +146,9 @@ class ReplayBuffer:
                     result.append(element)
         return torch.cat(result)
 
-def train_cyclegan(root_dir, num_epochs=200, batch_size=1):
+def train_cyclegan(root_dir, num_epochs=100, batch_size=4):
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    
+    print(device)
     # Models
     G_AB = Generator(input_channels=3, output_channels=3).to(device)
     G_BA = Generator(input_channels=3, output_channels=3).to(device)
@@ -260,7 +260,7 @@ def train_cyclegan(root_dir, num_epochs=200, batch_size=1):
         lr_scheduler_D.step()
         
         # Save models
-        if (epoch + 1) % 10 == 0:
+        if (epoch + 1) % 2 == 0:
             torch.save({
                 'G_AB': G_AB.state_dict(),
                 'G_BA': G_BA.state_dict(),
@@ -304,5 +304,7 @@ def generate_images(model_path, input_path, output_path, direction='AtoB'):
     transforms.ToPILImage()(output).save(output_path)
 
 if __name__ == "__main__":
-    root_dir = "archive"
-    train_cyclegan(root_dir)
+    # root_dir = "archive"
+    # train_cyclegan(root_dir,num_epochs=5,batch_size=2)
+
+    generate_images('checkpoint_4.pth','archive/test/photos/4.jpg','')
